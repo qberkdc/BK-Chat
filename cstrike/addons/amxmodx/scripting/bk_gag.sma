@@ -79,6 +79,11 @@ public cmd_gag(id) {
 	new amount = str_to_num(time);
 	new timestamp = get_systime();
 	
+	if(!(flag_control(id, ADMIN_CHAT))) {
+		client_print(id, print_console, "[BK-GAG] You are not authorized for this");
+		return PLUGIN_HANDLED;
+	}
+	
 	if(!target) {
 		client_print(id, print_console, "[BK-GAG] User not found");
 		return PLUGIN_HANDLED;
@@ -89,8 +94,8 @@ public cmd_gag(id) {
 		return PLUGIN_HANDLED;
 	}
 	
-	if(!(flag_control(id, ADMIN_CHAT))) {
-		client_print(id, print_console, "[BK-GAG] You are not authorized for this");
+	if((flag_control(target, ADMIN_IMMUNITY))) {
+		client_print(id, print_console, "[BK-GAG] You are not gag this user is immunity");
 		return PLUGIN_HANDLED;
 	}
 	
@@ -114,7 +119,7 @@ public cmd_gag(id) {
 	}
 	
 	new admin_name[128]; get_user_name(id, admin_name, charsmax(admin_name));
-	new target_name[128]; get_user_name(id, target_name, charsmax(target_name));
+	new target_name[128]; get_user_name(target, target_name, charsmax(target_name));
 	new times[4]; time_format(amount, times);
 	new fone[256]; formatex(fone, charsmax(fone), "%dD %dH %dM %dS", times[DAY], times[HOUR], times[MIN], times[SEC]);
 	
@@ -128,7 +133,7 @@ public cmd_gag(id) {
 public cmd_ungag(id) {
 	new user[128]; read_argv(1, user, charsmax(user));
 	new timestamp = get_systime();
-	new target = cmd_target(id, user, 2);
+	new target = cmd_target(id, user, 0);
 	
 	if(!(flag_control(id, ADMIN_CHAT))) {
 		client_print(id, print_console, "[BK-GAG] You are not authorized for this");
@@ -137,6 +142,11 @@ public cmd_ungag(id) {
 	
 	if(!target) {
 		client_print(id, print_console, "[BK-GAG] User not found");
+		return PLUGIN_HANDLED;
+	}
+	
+	if(target == id) {
+		client_print(id, print_console, "[BK-GAG] Nega is you !");
 		return PLUGIN_HANDLED;
 	}
 	
@@ -151,7 +161,7 @@ public cmd_ungag(id) {
 	}
 	
 	new admin_name[128]; get_user_name(id, admin_name, charsmax(admin_name));
-	new target_name[128]; get_user_name(id, target_name, charsmax(target_name));
+	new target_name[128]; get_user_name(target, target_name, charsmax(target_name));
 	
 	client_print(0, print_chat, "^7ADMIN %s^7 ungagged his player %s", admin_name, target_name);
 	datas[target] = timestamp-1;
