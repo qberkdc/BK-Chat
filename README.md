@@ -1,7 +1,7 @@
 ----
 
 <div align="center">
-  <h2>[CH] Experienced Chat</h1>
+  [CH] Experienced Chat
 </div>
 
 ----
